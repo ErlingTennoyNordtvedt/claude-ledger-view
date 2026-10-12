@@ -1,0 +1,3 @@
+[lint.per-file-ignores]
+# pytest relies on plain assert for its failure introspection.
+"tests/**" = ["S101"]
