@@ -29,6 +29,17 @@ written to). It shows spend per project for this month and all time, daily spend
   across charts, assigned by all-time spend. Pies have at most 6 slices, and slices under 2% fold
   into "other".
 
+### Budget model
+- Monthly budget (`BUDGET_USD`, $500) spread evenly over the month's working days: Mon–Fri minus
+  Norwegian public holidays. Weekend and holiday spend counts towards the month but earns no
+  budget.
+- Holidays are computed in `ledger_view/ledger.py` (anonymous Gregorian Easter algorithm plus
+  fixed dates). Rejected: the `holidays` package, an extra dependency for twelve dates a year.
+- Budget views use all spend. Per-project views leave out `backfill` (`EXCLUDED_PROJECTS`): it is
+  real money but has no real project, and it would dominate the pies.
+- Month-end forecast is a linear extrapolation per elapsed working day. It is simple, and it is
+  honest about being a rough guess.
+
 ### Environment: Nix flake devShell
-- `flake.nix` provides Python with jupyterlab, polars, seaborn, matplotlib, pytest, and mypy from
-  nixpkgs. Rejected: uv/pip venv, which would be a second package manager next to Nix.
+- `flake.nix` provides Python with jupyterlab, polars, seaborn, matplotlib, pytest, mypy, and ruff
+  from nixpkgs. Rejected: uv/pip venv, which would be a second package manager next to Nix.

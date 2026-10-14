@@ -6,6 +6,11 @@ project this month and in total.
 The notebook is [`ledger.ipynb`](ledger.ipynb). It shows:
 
 - headline totals: all time, this month, number of sessions, latest data point
+- **budget** ($500/month, spread over working days):
+  - this month's cumulative spend vs the budget pace, with a month-end forecast
+  - daily spend vs the daily budget, with a 5-working-day average and weekends shaded
+  - months compared: % of budget used vs % of working days elapsed
+  - a per-month summary table
 - pie charts of spend per project, this month and all time
 - spend per day, stacked by project
 - spend per model, and the ten most expensive sessions
@@ -56,3 +61,9 @@ ARCHITECTURE.md          design decisions
 - Spend over time comes from the ledger's `hourly_costs` view. A session that runs across midnight
   or a month boundary is split by the hour it was spent in.
 - Days and months are in `Europe/Oslo` time (`TZ` in `ledger_view/ledger.py`).
+- The budget is `BUDGET_USD` in `ledger_view/ledger.py` (overridable as `BUDGET` in the notebook's
+  setup cell). Each working day gets budget ÷ working days in the month. Working days are Mon–Fri
+  minus Norwegian public holidays, which are computed in code (Easter-based ones included).
+- Budget views count all spend. Per-project views leave out `backfill` (`EXCLUDED_PROJECTS`),
+  which is imported history with no real project.
+- The forecast is spend so far ÷ working days elapsed × working days in the month.
