@@ -1,0 +1,7 @@
+# Plain-English names for the PDF report. Copy to data/project_labels.toml (git-ignored)
+# and add one table per project, keyed by the project name in the ledger.
+# Projects without an entry are shown by their repo name.
+
+[ledger-view]
+name = "Spend dashboard"
+description = "Tracks Claude cost against the monthly budget"

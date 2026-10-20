@@ -40,6 +40,20 @@ written to). It shows spend per project for this month and all time, daily spend
 - Month-end forecast is a linear extrapolation per elapsed working day. It is simple, and it is
   honest about being a rough guess.
 
+### Monthly PDF report: matplotlib, one A4 page
+- A one-page summary for a non-technical manager, separate from the notebook. `ledger_view/report.py`
+  builds a frozen `MonthReport` from the frames (pure, tested); `ledger_view/report_pdf.py` draws it
+  on a matplotlib `Figure` and saves it as PDF. Run with `make report`.
+- matplotlib writes the PDF itself, so there is no new dependency. Rejected: reportlab and
+  weasyprint, extra packages for one page of charts and text.
+- One month per report, default the last completed month so the numbers are final. USD only, like
+  the ledger and budget.
+- Project names come from an optional TOML label file (`data/project_labels.toml`, read with
+  stdlib `tomllib`), so repo names can be shown in plain English. It lives in git-ignored `data/`.
+- The per-project bars include `backfill` (as "Imported history"), so they add up to the month's
+  spend. The project count and the headline's "largest share" leave it out.
+- Bars rather than pies for per-project spend: easier for a lay reader to compare.
+
 ### Environment: Nix flake devShell
 - `flake.nix` provides Python with jupyterlab, polars, seaborn, matplotlib, pytest, mypy, and ruff
   from nixpkgs. Rejected: uv/pip venv, which would be a second package manager next to Nix.

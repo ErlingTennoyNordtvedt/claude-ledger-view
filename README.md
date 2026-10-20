@@ -15,6 +15,25 @@ The notebook is [`ledger.ipynb`](ledger.ipynb). It shows:
 - spend per day, stacked by project
 - spend per model, and the ten most expensive sessions
 
+## Monthly PDF report
+
+`make report` writes a one-page A4 PDF for a non-technical reader to `build/claude-spend-YYYY-MM.pdf`:
+a plain-language summary, spend vs budget, where the money went per project, spending through the
+month, and month-by-month spend.
+
+```sh
+make report                                  # last full month
+make report MONTH=2026-09 AUTHOR="Your Name" # a chosen month, with your name in the header
+make report-example                          # from data/ledger_example.sqlite
+```
+
+Project names in the ledger are repo names. To show plain-English names and a one-line description,
+copy [`project_labels.example.toml`](project_labels.example.toml) to `data/project_labels.toml` and
+fill it in. Projects without an entry keep their repo name.
+
+The current month works too; it is marked "figures up to" today, and the averages use the working
+days so far.
+
 ## Requirements
 
 Nix with flakes enabled. Everything else (Python, JupyterLab, polars, seaborn, pytest, mypy,
@@ -51,7 +70,11 @@ Or enter the shell yourself with `nix develop`.
 ```
 ledger.ipynb             the notebook: config, load, charts
 ledger_view/ledger.py    loading from SQLite and pure polars aggregations
+ledger_view/report.py    the numbers for the PDF report, pure
+ledger_view/report_pdf.py  PDF rendering (matplotlib) and the report CLI
 tests/test_ledger.py     unit tests for the aggregations
+tests/test_report.py     unit tests for the report numbers and wording
+project_labels.example.toml  example plain-English project names for the report
 flake.nix                dev shell
 ARCHITECTURE.md          design decisions
 ```
