@@ -6,3 +6,4 @@ __pycache__/
 result
 **__pycache__
 build/
+**.ipynb
