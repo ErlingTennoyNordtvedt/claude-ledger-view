@@ -55,7 +55,11 @@ LEDGER_DB=data/ledger_example.sqlite make lab
 
 ## Usage
 
+After cloning, run `make setup` once. It sets up a git filter so `ledger.ipynb` is committed
+without outputs or kernel metadata (a few KB instead of hundreds); your local copy keeps its plots.
+
 ```sh
+make setup        # once per clone: strip notebook outputs on git add
 make lab          # JupyterLab on the live ledger
 make example      # JupyterLab on data/ledger_example.sqlite
 make run          # execute the notebook headless into build/
@@ -72,8 +76,10 @@ ledger.ipynb             the notebook: config, load, charts
 ledger_view/ledger.py    loading from SQLite and pure polars aggregations
 ledger_view/report.py    the numbers for the PDF report, pure
 ledger_view/report_pdf.py  PDF rendering (matplotlib) and the report CLI
+ledger_view/strip_notebook.py  git clean filter that strips notebook outputs
 tests/test_ledger.py     unit tests for the aggregations
 tests/test_report.py     unit tests for the report numbers and wording
+tests/test_strip_notebook.py  tests for the notebook stripper
 project_labels.example.toml  example plain-English project names for the report
 flake.nix                dev shell
 ARCHITECTURE.md          design decisions

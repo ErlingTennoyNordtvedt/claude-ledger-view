@@ -5,10 +5,15 @@ OUT_DIR  := build
 REPORT   := $(NIX) python -m ledger_view.report_pdf --out-dir $(OUT_DIR) \
             $(if $(MONTH),--month $(MONTH)) $(if $(AUTHOR),--author "$(AUTHOR)")
 
-.PHONY: help lab example test typecheck lint check run run-example report report-example clean
+.PHONY: help setup lab example test typecheck lint check run run-example report report-example clean
 
 help: ## Show this help
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-12s %s\n", $$1, $$2}'
+
+setup: ## One-time per clone: strip notebook outputs on git add
+	git config filter.nbstrip.clean 'python3 -m ledger_view.strip_notebook'
+	git config filter.nbstrip.smudge cat
+	git config filter.nbstrip.required true
 
 lab: ## Open JupyterLab against the live ledger
 	$(NIX) jupyter lab $(NOTEBOOK)

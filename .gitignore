@@ -7,3 +7,4 @@ result
 **__pycache__
 build/
 **.ipynb
+!/ledger.ipynb

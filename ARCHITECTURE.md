@@ -54,6 +54,20 @@ written to). It shows spend per project for this month and all time, daily spend
   spend. The project count and the headline's "largest share" leave it out.
 - Bars rather than pies for per-project spend: easier for a lay reader to compare.
 
+### Notebook in git: committed stripped, via a git clean filter
+- `ledger.ipynb` is committed without outputs, execution counts, cell metadata or
+  `language_info`; only `kernelspec` is kept. Outputs are embedded PNGs (≈550 KB) and
+  `language_info` holds the local Python version, which would churn diffs.
+- A git `clean` filter (`.gitattributes`, configured by `make setup`) runs
+  `ledger_view/strip_notebook.py` on `git add`, so the working copy keeps its plots. The filter is
+  `required`, so a broken filter blocks the add instead of committing outputs.
+- The stripper is stdlib only, so the filter runs with plain `python3` outside the dev shell. It
+  writes JSON the way nbformat does (indent 1, sorted keys), so it is idempotent.
+- Rejected: `nbstripout`, an extra package for ~50 lines of JSON handling; `nbconvert
+  --clear-output`, which needs the dev shell and is a manual step that is easy to forget.
+- Supersedes: ignoring all `*.ipynb` in git (commit 1989a59). Other notebooks stay ignored;
+  `.gitignore` re-includes only `/ledger.ipynb`.
+
 ### Environment: Nix flake devShell
 - `flake.nix` provides Python with jupyterlab, polars, seaborn, matplotlib, pytest, mypy, and ruff
   from nixpkgs. Rejected: uv/pip venv, which would be a second package manager next to Nix.
