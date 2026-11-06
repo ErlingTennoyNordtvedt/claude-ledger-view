@@ -18,6 +18,9 @@
           pyarrow
           seaborn
           matplotlib
+          statsmodels
+          # Its test inputs pull in tensorflow, which nixpkgs marks broken on this Python.
+          (numpyro.overridePythonAttrs (_: { doCheck = false; nativeCheckInputs = [ ]; }))
           pytest
           mypy
         ]);

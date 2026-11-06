@@ -5,7 +5,7 @@ OUT_DIR  := build
 REPORT   := $(NIX) python -m ledger_view.report_pdf --out-dir $(OUT_DIR) \
             $(if $(MONTH),--month $(MONTH)) $(if $(AUTHOR),--author "$(AUTHOR)")
 
-.PHONY: help setup lab example test typecheck lint check run run-example report report-example clean
+.PHONY: help setup lab example test test-unit typecheck lint check run run-example report report-example clean
 
 help: ## Show this help
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-12s %s\n", $$1, $$2}'
@@ -21,8 +21,11 @@ lab: ## Open JupyterLab against the live ledger
 example: ## Open JupyterLab against the example ledger
 	LEDGER_DB=$(EXAMPLE) $(NIX) jupyter lab $(NOTEBOOK)
 
-test: ## Run the unit tests
+test: ## Run all tests, integration included
 	$(NIX) pytest -q
+
+test-unit: ## Run only the fast unit tests
+	$(NIX) pytest -q -m "not integration"
 
 typecheck: ## Type-check with mypy --strict
 	$(NIX) mypy --strict --ignore-missing-imports ledger_view tests
